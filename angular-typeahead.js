@@ -1,14 +1,17 @@
 angular.module('siyfion.sfTypeahead', [])
-  .directive('sfTypeahead', function () {
+  .directive('sfTypeahead', function ($parse) {
     return {
       restrict: 'AC',       // Only apply on an attribute or class
       require: '?ngModel',  // The two-way data bound value that is returned by the directive
-      scope: {
-        options: '=',       // The typeahead configuration options (https://github.com/twitter/typeahead.js/blob/master/doc/jquery_typeahead.md#options)
-        datasets: '=',      // The typeahead datasets to use (https://github.com/twitter/typeahead.js/blob/master/doc/jquery_typeahead.md#datasets)
-        suggestionKey : '@'
-      },
+      // scope: {
+      //   options: '=',       // The typeahead configuration options (https://github.com/twitter/typeahead.js/blob/master/doc/jquery_typeahead.md#options)
+      //   datasets: '=',      // The typeahead datasets to use (https://github.com/twitter/typeahead.js/blob/master/doc/jquery_typeahead.md#datasets)
+      //   suggestionKey : '@'
+      // },
       link: function (scope, element, attrs, ngModel) {
+        scope.options = $parse(attrs.options)(scope);
+        scope.datasets = $parse(attrs.datasets)(scope);
+        scope.suggestionKey = attrs.suggestionKey;
         var options = scope.options || {},
             datasets = (angular.isArray(scope.datasets) ? scope.datasets : [scope.datasets]) || [], // normalize to array
             init = true;
